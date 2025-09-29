@@ -1,4 +1,11 @@
+import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+// const {
+//   register,
+//   handleSubmit,
+//   formState: { errors }
+// } = useForm()
+// const onSubmit = handleSubmit((data) => console.log(data))
 
 export default function Login() {
   return (
@@ -27,7 +34,10 @@ export default function Login() {
                 <div className='mt-1 text-red-600 min-h-[1rem] text-sm'></div>
               </div>
               <div className='mt-3'>
-                <button className='w-full text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600'>
+                <button
+                  type='submit'
+                  className='w-full text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600'
+                >
                   Đăng nhập
                 </button>
               </div>
