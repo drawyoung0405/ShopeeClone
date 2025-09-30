@@ -1,10 +1,17 @@
-import type { RegisterOptions, UseFormGetValues } from 'react-hook-form'
+import type {
+  FieldValues,
+  RegisterOptions,
+  UseFormGetValues,
+  Path
+} from 'react-hook-form'
+import type { FormData } from '../pages/Register/Register'
 
-type Rules = {
-  [key in 'email' | 'password' | 'confirm_password']?: RegisterOptions<FormData>
+export type Rules<TFormValues extends FieldValues> = {
+  [K in Path<TFormValues>]?: RegisterOptions<TFormValues, K>
 }
-
-export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
+export const getRules = (
+  getValues?: UseFormGetValues<FormData>
+): Rules<FormData> => ({
   email: {
     required: {
       value: true,
@@ -50,8 +57,9 @@ export const getRules = (getValues?: UseFormGetValues<any>): Rules => ({
       value: 6,
       message: 'Độ dài từ 6 - 160 ký tự'
     },
-    validate:typeof getValues === 'function'
-      ? (value) => value === getValues('password') || 'Mật khẩu không khớp'
-      : undefined
+    validate:
+      typeof getValues === 'function'
+        ? (value) => value === getValues('password') || 'Mật khẩu không khớp'
+        : undefined
   }
 })

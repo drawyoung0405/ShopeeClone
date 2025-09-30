@@ -1,7 +1,9 @@
 import { useForm, type RegisterOptions } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { getRules } from '../../untils/rules'
-interface FormData {
+import Input from '../../Components/Input'
+
+export interface FormData {
   email: string
   password: string
   confirm_password: string
@@ -11,7 +13,6 @@ export default function Register() {
     register,
     handleSubmit,
     getValues,
-    watch,
     formState: { errors }
   } = useForm<FormData>()
   const rules = getRules(getValues)
@@ -30,7 +31,16 @@ export default function Register() {
               noValidate
             >
               <div className='text-2xl'>Đăng ký</div>
-              <div className='mt-8'>
+              <Input
+                name='email'
+                type='email'
+                register={register}
+                className='mt-8'
+                errorMessage={errors.email?.message}
+                placeholder='Email'
+                rules={rules.email}
+              />
+              {/* <div className='mt-8'>
                 <input
                   type='email'
                   className='p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
@@ -43,8 +53,17 @@ export default function Register() {
                 <div className='mt-1 text-red-600 min-h-[1rem] text-sm'>
                   {errors.email?.message}
                 </div>
-              </div>
-              <div className='mt-3'>
+              </div> */}
+              <Input
+                name='password'
+                type='password'
+                register={register}
+                className='mt-2'
+                errorMessage={errors.password?.message}
+                placeholder='Password'
+                rules={rules.password}
+              />
+              {/* <div className='mt-3'>
                 <input
                   type='password'
                   {...register(
@@ -58,8 +77,17 @@ export default function Register() {
                 <div className='mt-1 text-red-600 min-h-[1rem] text-sm'>
                   {errors.password?.message}
                 </div>
-              </div>
-              <div className='mt-3'>
+              </div> */}
+              <Input
+                name='confirm_password'
+                type='password'
+                register={register}
+                className='mt-2'
+                errorMessage={errors.confirm_password?.message}
+                placeholder='Password'
+                rules={rules.confirm_password}
+              />
+              {/* <div className='mt-3'>
                 <input
                   {...register('confirm_password', {
                     ...(rules.confirm_password as RegisterOptions<
@@ -75,7 +103,7 @@ export default function Register() {
                 <div className='mt-1 text-red-600 min-h-[1rem] text-sm'>
                   {errors.confirm_password?.message}
                 </div>
-              </div>
+              </div> */}
               <div className='mt-3'>
                 <button
                   type='submit'
