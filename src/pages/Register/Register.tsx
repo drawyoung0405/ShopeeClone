@@ -3,22 +3,48 @@ import { Link } from 'react-router-dom'
 import { schema, type Schema } from '../../untils/rules'
 import Input from '../../Components/Input'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useMutation } from '@tanstack/react-query'
+import { registerAccount } from '../../apis/auth.api'
+import { omit } from 'lodash'
 
 type FormData = Schema
 export default function Register() {
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(schema)
   })
+  const registerAccountMutation = useMutation({
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) =>
+      registerAccount(body)
+  })
   // const rules = getRules(getValues)
   const onSubmit = handleSubmit((data) => {
-    const pass = getValues('password')
-    console.log(pass)
+    console.log('data before omit:', data)
+    // const body = omit(data, ['confirm_password'])
+    // registerAccountMutation.mutate(body, {
+    //   onSuccess: (data) => {
+    //     console.log(data)
+    //   }
+    // })
+    const body = omit(data, ['confirm_password']) as Omit<
+      FormData,
+      'confirm_password'
+    >
+    console.log('Body sau khi omit:', body)
+
+    registerAccountMutation.mutate(body, {
+      onSuccess: (data) => {
+        console.log('Kết quả API:', data)
+      },
+      onError: (error) => {
+        console.error('API error:', error)
+      }
+    })
   })
+
   return (
     <div className='bg-orange'>
       <div className='container'>
