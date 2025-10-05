@@ -3,3 +3,5 @@ import http from '../untils/http'
 
 export const registerAccount = (body: { email: string; password: string }) =>
   http.post<AuthResponse>('/rregister', body)
+export const loginAccount = (body: { email: string; password: string }) =>
+  http.post<AuthResponse>('/login', body)
