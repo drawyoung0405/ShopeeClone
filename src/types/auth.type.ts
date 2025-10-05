@@ -1,7 +1,7 @@
 import type { User } from "./user.type"
-import type { ResponseAPI } from "./utils.type"
+import type { ResponseApi } from "./utils.type"
 
-export type AuthResponse = ResponseAPI<{
+export type AuthResponse = ResponseApi<{
   access_token: string
   refreseh_token: string
   expires: string
