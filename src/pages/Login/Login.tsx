@@ -8,15 +8,17 @@ import { isAxiosUnprocessableEntityError } from '../../untils/utils'
 import type { ResponseApi } from '../../types/utils.type'
 import Input from '../../Components/Input'
 
-type FormData = Schema
+type FormData = Pick<Schema, 'email' | 'password'>
+const loginSchema = schema.omit(['confirm_password'])
 export default function Login() {
   const {
+    watch,
     register,
     handleSubmit,
     setError,
     formState: { errors }
   } = useForm<FormData>({
-    resolver: yupResolver(schema)
+    resolver:yupResolver(loginSchema)
   })
   const loginMutation = useMutation({
     mutationFn: (body: Omit<FormData, 'confirm_password'>) => login(body)
@@ -24,7 +26,6 @@ export default function Login() {
   // const rules = getRules(getValues)
   const onSubmit = handleSubmit((data) => {
     const body = data
-
     loginMutation.mutate(body, {
       onSuccess: (data) => {
         console.log('Kết quả API:', data)
@@ -44,6 +45,8 @@ export default function Login() {
       }
     })
   })
+  const value = watch()
+  console.log('value:', value)
   return (
     <div className='bg-orange'>
       <div className='container'>
@@ -52,6 +55,7 @@ export default function Login() {
             <form
               className='p-10 rounded bg-white shadow-sm'
               onSubmit={onSubmit}
+              noValidate
             >
               <div className='text-2xl'>Đăng nhập</div>
               <Input

@@ -1,7 +1,6 @@
 import type {
   FieldValues,
   RegisterOptions,
-  UseFormGetValues,
   Path
 } from 'react-hook-form'
 // import type { FormData } from '../pages/Register/Register'
