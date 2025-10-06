@@ -9,9 +9,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        orange: "#ee4d2d",
-        dark: "#1c1c1c",
-        lightGray: "#f5f5f5",
+        primary: "#6B5B3E",
+        secondary: "#BFA980",
+        accent: "#8A9A5B",
+        background: "#EEE8D5",
+        surface: "#F9F7F3",
+        text: "#2F2F2F",
+        border: "#CBBF9D",
+        highlight: "#A67B5B",
       },
     },
   },

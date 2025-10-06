@@ -48,7 +48,7 @@ export default function Login() {
   const value = watch()
   console.log('value:', value)
   return (
-    <div className='bg-orange'>
+    <div className='bg-background'>
       <div className='container'>
         <div className='grid grid-cols-1 lg:grid-cols-5 py-12 lg:py-32 lg:pr-10'>
           <div className='lg:col-span-2 lg:col-start-4'>
@@ -77,14 +77,14 @@ export default function Login() {
               <div className='mt-3'>
                 <button
                   type='submit'
-                  className='w-full text-center py-4 px-2 uppercase bg-red-500 text-white text-sm hover:bg-red-600'
+                  className='w-full text-center py-4 px-2 uppercase bg-primary text-white text-sm hover:bg-secondary'
                 >
                   Đăng nhập
                 </button>
               </div>
               <div className='flex items-center justify-center mt-8'>
                 <span className='text-gray-400'>Bạn chưa có tài khoản?</span>
-                <Link className='text-red-400 ml-1' to='/register'>
+                <Link className='text-highlight ml-1' to='/register'>
                   Đăng ký
                 </Link>
               </div>

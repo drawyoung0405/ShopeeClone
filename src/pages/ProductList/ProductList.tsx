@@ -1,3 +1,3 @@
 export default function ProductList() {
-  return <div>PRODUCTLIST NE</div>
+  return <div className='bg-background'>PRODUCTLIST NE</div>
 }
