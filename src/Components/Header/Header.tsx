@@ -1,12 +1,56 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-
+import {
+  useFloating,
+  autoUpdate,
+  offset,
+  flip,
+  shift,
+  useHover,
+  useFocus,
+  useDismiss,
+  useRole,
+  useInteractions,
+  FloatingPortal,
+  arrow,
+  safePolygon
+} from '@floating-ui/react'
 export default function Header() {
+  const arrowRef = useRef<HTMLElement>(null)
+  const [open, setOpen] = useState(false)
+
+  const { refs, floatingStyles, context, middlewareData } = useFloating({
+    open: open,
+    onOpenChange: setOpen,
+    placement: 'bottom-start',
+    middleware: [offset(8), flip(), shift(), arrow({ element: arrowRef })],
+    // whileElementsMounted: autoUpdate
+  })
+  const hover = useHover(context, {move:false, handleClose: safePolygon()})
+  const focus = useFocus(context)
+  const dismiss = useDismiss(context)
+  const role = useRole(context, {
+    // If your reference element has its own label (text).
+    role: 'tooltip'
+    // If your reference element does not have its own label,
+    // e.g. an icon
+  })
+
+  // Merge all the interactions into prop getters
+  const { getReferenceProps, getFloatingProps } = useInteractions([
+    hover,
+    focus,
+    dismiss,
+    role
+  ])
   return (
     <div className='pb-5 pt-2 bg-primary'>
       <div className='container'>
         <div className='flex justify-end'>
-          <div className='flex items-center py-1 hover:text-gray-300 cursor-pointer'>
+          <div
+            className='flex items-center py-1 hover:text-gray-300 cursor-pointer'
+            ref={refs.setReference}
+          >
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -36,7 +80,36 @@ export default function Header() {
                 d='m19.5 8.25-7.5 7.5-7.5-7.5'
               />
             </svg>
+            <FloatingPortal>
+              {open && (
+                <div
+                  ref={refs.setFloating}
+                  style={floatingStyles}
+                  {...getFloatingProps()}
+                >
+                  <span
+                    ref={arrowRef}
+                    className='border-t-0 border-x-transparent border-b-white border-[11px] absolute -translate-y-full'
+                    style={{
+                      left: middlewareData.arrow?.x,
+                      top: middlewareData.arrow?.y
+                    }}
+                  ></span>
+                  <div className='bg-white relative shadow-md rounded-sm border boeder-gray-200'>
+                    <div className='flex flex-col py-2 px-3'>
+                      <button className='py-2 px-3 hover:bg-secondary'>
+                        Tiếng Việt
+                      </button>
+                      <button className='py-2 px-3 hover:bg-secondary'>
+                        English
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </FloatingPortal>
           </div>
+
           <div className='cursor-pointer hover:text-gray-300 flex items-center py-1 ml-6'>
             <div className='text-white w-5 h-5 mr-2 flex-shrink-0'>
               <svg
