@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   useFloating,
   autoUpdate,
@@ -16,17 +17,20 @@ import {
   safePolygon
 } from '@floating-ui/react'
 export default function Header() {
-  const arrowRef = useRef<HTMLElement>(null)
+  // const arrowRef = useRef<HTMLElement>(null)
+  const arrowRef = useRef<HTMLSpanElement | null>(null)
   const [open, setOpen] = useState(false)
 
-  const { refs, floatingStyles, context, middlewareData } = useFloating({
-    open: open,
-    onOpenChange: setOpen,
-    placement: 'bottom-start',
-    middleware: [offset(8), flip(), shift(), arrow({ element: arrowRef })],
-    // whileElementsMounted: autoUpdate
-  })
-  const hover = useHover(context, {move:false, handleClose: safePolygon()})
+  const { refs, floatingStyles, context, middlewareData, placement } =
+    useFloating({
+      open: open,
+      onOpenChange: setOpen,
+      placement: 'bottom-end',
+      middleware: [offset(8), flip(), shift(), arrow({ element: arrowRef })],
+      whileElementsMounted: autoUpdate,
+      strategy: 'absolute'
+    })
+  const hover = useHover(context, { move: false, handleClose: safePolygon() })
   const focus = useFocus(context)
   const dismiss = useDismiss(context)
   const role = useRole(context, {
@@ -50,6 +54,7 @@ export default function Header() {
           <div
             className='flex items-center py-1 hover:text-gray-300 cursor-pointer'
             ref={refs.setReference}
+            {...getReferenceProps()}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -81,32 +86,55 @@ export default function Header() {
               />
             </svg>
             <FloatingPortal>
-              {open && (
-                <div
-                  ref={refs.setFloating}
-                  style={floatingStyles}
-                  {...getFloatingProps()}
-                >
-                  <span
-                    ref={arrowRef}
-                    className='border-t-0 border-x-transparent border-b-white border-[11px] absolute -translate-y-full'
-                    style={{
-                      left: middlewareData.arrow?.x,
-                      top: middlewareData.arrow?.y
-                    }}
-                  ></span>
-                  <div className='bg-white relative shadow-md rounded-sm border boeder-gray-200'>
-                    <div className='flex flex-col py-2 px-3'>
-                      <button className='py-2 px-3 hover:bg-secondary'>
-                        Tiếng Việt
-                      </button>
-                      <button className='py-2 px-3 hover:bg-secondary'>
-                        English
-                      </button>
-                    </div>
+              <AnimatePresence>
+                {open && (
+                  <div
+                    ref={refs.setFloating}
+                    style={floatingStyles}
+                    {...getFloatingProps()}
+                  >
+                    <motion.div
+                      initial={{ opacity: 0, transform: 'scale(0)' }}
+                      animate={{ opacity: 1, transform: 'scale(1)' }}
+                      exit={{ opacity: 0, transform: 'scale(0)' }}
+                      transition={{ duration: 0.2 }}
+                      style = {{
+                        transformOrigin:`${middlewareData.arrow?.x != null ? `${middlewareData.arrow.x}px` : 'center'} top`
+                      }}
+                    >
+                      <span
+                        ref={arrowRef}
+                        className='border-t-0 border-x-transparent border-b-white border-[11px] absolute'
+                        style={{
+                          left:
+                            middlewareData.arrow?.x != null
+                              ? `${middlewareData.arrow.x}px`
+                              : undefined,
+                          top:
+                            middlewareData.arrow?.y != null
+                              ? `${middlewareData.arrow.y}px`
+                              : undefined,
+                          transform: placement?.startsWith('bottom')
+                            ? 'translateY(-100%)'
+                            : placement?.startsWith('top')
+                              ? 'translateY(100%)'
+                              : undefined
+                        }}
+                      />
+                      <div className='bg-white relative shadow-md rounded-sm border boeder-gray-200'>
+                        <div className='flex flex-col py-2 px-3'>
+                          <button className='py-2 px-3 hover:bg-secondary'>
+                            Tiếng Việt
+                          </button>
+                          <button className='py-2 px-3 hover:bg-secondary'>
+                            English
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
                   </div>
-                </div>
-              )}
+                )}
+              </AnimatePresence>
             </FloatingPortal>
           </div>
 
