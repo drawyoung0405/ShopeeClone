@@ -1,60 +1,25 @@
-import React, { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import {
-  useFloating,
-  autoUpdate,
-  offset,
-  flip,
-  shift,
-  useHover,
-  useFocus,
-  useDismiss,
-  useRole,
-  useInteractions,
-  FloatingPortal,
-  arrow,
-  safePolygon
-} from '@floating-ui/react'
+import Popover from '../Popover'
 export default function Header() {
-  // const arrowRef = useRef<HTMLElement>(null)
-  const arrowRef = useRef<HTMLSpanElement | null>(null)
-  const [open, setOpen] = useState(false)
-
-  const { refs, floatingStyles, context, middlewareData, placement } =
-    useFloating({
-      open: open,
-      onOpenChange: setOpen,
-      placement: 'bottom-end',
-      middleware: [offset(8), flip(), shift(), arrow({ element: arrowRef })],
-      whileElementsMounted: autoUpdate,
-      strategy: 'absolute'
-    })
-  const hover = useHover(context, { move: false, handleClose: safePolygon() })
-  const focus = useFocus(context)
-  const dismiss = useDismiss(context)
-  const role = useRole(context, {
-    // If your reference element has its own label (text).
-    role: 'tooltip'
-    // If your reference element does not have its own label,
-    // e.g. an icon
-  })
-
-  // Merge all the interactions into prop getters
-  const { getReferenceProps, getFloatingProps } = useInteractions([
-    hover,
-    focus,
-    dismiss,
-    role
-  ])
   return (
     <div className='pb-5 pt-2 bg-primary'>
       <div className='container'>
         <div className='flex justify-end'>
-          <div
+          <Popover
+          as='span'
             className='flex items-center py-1 hover:text-gray-300 cursor-pointer'
-            ref={refs.setReference}
-            {...getReferenceProps()}
+            renderPopover={
+              <div className='bg-white relative shadow-md rounded-sm border border-gray-200'>
+                <div className='flex flex-col'>
+                  <button className='block py-2 px-3 hover:bg-background hover:text-black w-full text-left'>
+                    Tiếng Việt
+                  </button>
+                  <button className='block py-2 px-3 hover:bg-background hover:text-black w-full text-left'>
+                    English
+                  </button>
+                </div>
+              </div>
+            }
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -85,78 +50,49 @@ export default function Header() {
                 d='m19.5 8.25-7.5 7.5-7.5-7.5'
               />
             </svg>
-            <FloatingPortal>
-              <AnimatePresence>
-                {open && (
-                  <div
-                    ref={refs.setFloating}
-                    style={floatingStyles}
-                    {...getFloatingProps()}
-                  >
-                    <motion.div
-                      initial={{ opacity: 0, transform: 'scale(0)' }}
-                      animate={{ opacity: 1, transform: 'scale(1)' }}
-                      exit={{ opacity: 0, transform: 'scale(0)' }}
-                      transition={{ duration: 0.2 }}
-                      style = {{
-                        transformOrigin:`${middlewareData.arrow?.x != null ? `${middlewareData.arrow.x}px` : 'center'} top`
-                      }}
-                    >
-                      <span
-                        ref={arrowRef}
-                        className='border-t-0 border-x-transparent border-b-white border-[11px] absolute'
-                        style={{
-                          left:
-                            middlewareData.arrow?.x != null
-                              ? `${middlewareData.arrow.x}px`
-                              : undefined,
-                          top:
-                            middlewareData.arrow?.y != null
-                              ? `${middlewareData.arrow.y}px`
-                              : undefined,
-                          transform: placement?.startsWith('bottom')
-                            ? 'translateY(-100%)'
-                            : placement?.startsWith('top')
-                              ? 'translateY(100%)'
-                              : undefined
-                        }}
-                      />
-                      <div className='bg-white relative shadow-md rounded-sm border boeder-gray-200'>
-                        <div className='flex flex-col py-2 px-3'>
-                          <button className='py-2 px-3 hover:bg-secondary'>
-                            Tiếng Việt
-                          </button>
-                          <button className='py-2 px-3 hover:bg-secondary'>
-                            English
-                          </button>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </div>
-                )}
-              </AnimatePresence>
-            </FloatingPortal>
-          </div>
-
-          <div className='cursor-pointer hover:text-gray-300 flex items-center py-1 ml-6'>
-            <div className='text-white w-5 h-5 mr-2 flex-shrink-0'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='w-full h-full object-cover rounded-full'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'
-                />
-              </svg>
-            </div>
-            <div className='text-black hover:text-gray-300'>Vo Nhu Hoa</div>
-          </div>
+          </Popover>
+          <Popover
+            className='cursor-pointer hover:text-gray-300 flex items-center py-1 ml-6'
+            renderPopover={
+              <div>
+                <Link
+                  to='/'
+                  className='block py-3 px-4 bg-white hover:bg-background hover:text-black-500 w-full text-left'
+                >
+                  Tài khoản của tôi
+                </Link>
+                <Link
+                  to='/'
+                  className='block py-3 px-4 bg-white hover:bg-background hover:text-black-500 w-full text-left'
+                >
+                  Đơn mua
+                </Link>
+                <button className='block py-3 px-4 bg-white hover:bg-background hover:text-black-500 w-full text-left'>
+                  Đăng xuất
+                </button>
+              </div>
+            }
+          >
+            <>
+              <div className='text-white w-5 h-5 mr-2 flex-shrink-0'>
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='w-full h-full object-cover rounded-full'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'
+                  />
+                </svg>
+              </div>
+              <div className=' hover:text-gray-300'>Vo Nhu Hoa</div>
+            </>
+          </Popover>
         </div>
         <div className='grid grid-cols-12 gap4 mt-4 items-end'>
           <Link className='flex col-span-2' to='/'>
